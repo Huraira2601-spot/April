@@ -1,0 +1,21 @@
+# Google Cloud Run & Docker Deployment for April Trading Bot
+FROM node:20-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependency files
+COPY package*.json ./
+
+# Install production dependencies only
+RUN npm ci --only=production --no-audit
+
+# Copy application source code
+COPY . .
+
+# Expose port (Google Cloud Run dynamically injects $PORT)
+ENV PORT=3000
+EXPOSE 3000
+
+# Start April Bot
+CMD ["node", "src/server.js"]
